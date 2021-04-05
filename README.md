@@ -39,4 +39,8 @@ settings-personal settings-personal access token 填写name,勾选repo权限，�
 - 根目录下创建.github\workflows 文件夹
 - https://gist.githubusercontent.com/lipengzhou/b92f80142afa37aea397da47366bd872/raw/e0842faf4e587eafc7c2448de18305fbdd3db16e/main.yml 将该文件ctrl + S 保存至本地 文件后缀.yml, 保存类型选择所有文件
 - 修改打包构建的run命令，增加pm2.config.json文件
+- git tag v0.0.1
+- git tag
+- git push origin v0.0.1
+- 进入github actions
 
