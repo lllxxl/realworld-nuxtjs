@@ -47,3 +47,18 @@ export const getComments = (slug) => {
   })
 }
 
+export const createArticle = (data) => {
+  return request({
+    method: 'POST',
+    url: `/api/articles`,
+    data
+  })
+}
+
+export const updateArticle = (slug, data) => {
+  return request({
+    method: 'POST',
+    url: `/api/articles/${slug}`,
+    data
+  })
+}

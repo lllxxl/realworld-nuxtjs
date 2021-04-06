@@ -35,6 +35,11 @@ export default {
               component: resolve(__dirname, 'pages/editor'),
             },
             {
+              path: '/editor/:slug',
+              name: 'editor',
+              component: resolve(__dirname, 'pages/editor'),
+            },
+            {
               path: '/profile/:username',
               name: 'profile',
               component: resolve(__dirname, 'pages/profile'),
