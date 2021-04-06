@@ -4,16 +4,31 @@
       <div class="container">
         <div class="row">
           <div class="col-xs-12 col-md-10 offset-md-1">
-            <img src="http://i.imgur.com/Qr71crq.jpg" class="user-img" />
-            <h4>Eric Simons</h4>
+            <img :src="profile.image" class="user-img" />
+            <h4>{{ profile.username }}</h4>
             <p>
-              Cofounder @GoThinkster, lived in Aol's HQ for a few months, kinda
-              looks like Peeta from the Hunger Games
+              {{ profile.bio }}
             </p>
-            <button class="btn btn-sm btn-outline-secondary action-btn">
+            <button
+              class="btn btn-sm btn-outline-secondary action-btn"
+              v-if="profile.username !== user.username"
+              :disabled="disableFollow"
+              @click="handleUserAction"
+            >
               <i class="ion-plus-round"></i>
-              &nbsp; Follow Eric Simons
+              <template v-if="!profile.following"
+                >&nbsp; Follow {{ profile.username }}</template
+              >
+              <template v-else>&nbsp; UnFollow {{ profile.username }}</template>
             </button>
+            <nuxt-link
+              to="/settings"
+              class="btn btn-sm btn-outline-secondary action-btn"
+              v-else
+            >
+              <i class="ion-gear-a"></i>
+              &nbsp; Edit Profile Settings
+            </nuxt-link>
           </div>
         </div>
       </div>
@@ -82,16 +97,55 @@
 </template>
 
 <script>
+import { getProfile, followUser, unFollowUser } from "@/api/user.js";
+import { mapState } from "vuex";
+import { listArticles } from "@/api/article";
 export default {
   name: "profileIndex",
   middleware: "authenticated",
   components: {},
   data() {
-    return {};
+    return {
+      // profile: {},
+      disableFollow: false,
+    };
   },
-  computed: {},
+  computed: {
+    ...mapState(["user"]),
+  },
   watch: {},
-  methods: {},
+  methods: {
+    async handleUserAction() {
+      this.disableFollow = true;
+      const { following, username } = this.profile;
+      const { data } = following
+        ? await unFollowUser(username)
+        : await followUser(username);
+      this.profile = data.profile;
+      this.disableFollow = false;
+    },
+  },
+  async asyncData({params}) {
+    const { username } = params;
+    const [profileRes, userArticleRes] = await Promise.all([
+      getProfile(username),
+      listArticles({
+        author: username
+      })
+    ]);
+
+    console.log('-----------', profileRes, userArticleRes)
+
+    return {
+      profile: profileRes.profile,
+      articles: userArticleRes.articles
+    }
+    
+  },
+  // mounted() {
+  //   this.getProfile();
+  //   this.getUserArticle();
+  // },
 };
 </script>
 
