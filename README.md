@@ -1,30 +1,31 @@
-# fed-e-task-03-03
+项目地址：http://106.75.108.252:3000
 
-#### 手动部署
+### 手动部署
 1. nuxt.config.js增加server配置server:{host: '0.0.0.0', port: 3000}
 2. 运行nuxt build, 将.nuxt, static, nuxt.config.js, package.json, package-lock.json添加到压缩包
-3. ssh root@106.75.108.252 
-mkdir realworld-nuxtjs 
-cd realworld-nuxt.js 
-pwd 
-exit
-scp .\realworld-nuxtjs.zip root@106.75.108.252:/root/realworld-nuxtjs(将/root/realworld-nuxtjs替换为实际目录)
+3. 上传服务器
+- ssh root@106.75.108.252 
+- mkdir realworld-nuxtjs 
+- cd realworld-nuxt.js 
+- pwd 
+- exit
+- scp .\realworld-nuxtjs.zip root@106.75.108.252:/root/realworld-nuxtjs(将/root/realworld-nuxtjs替换为实际目录)
 
-ssh root@106.75.108.252 
-cd realworld-nuxtjs
-unzip realworld-nuxtjs.zip
-ls -a
-npm i
-npm i --global pm2
-pm2 start npm -- start
+- ssh root@106.75.108.252 
+- cd realworld-nuxtjs
+- unzip realworld-nuxtjs.zip
+- ls -a
+- npm i
+- npm i --global pm2
+- pm2 start npm -- start
 
-pm2 stop ${id}
-pm2 list
-pm2 start
-pm2 stop
-pm2 reload 一个一个进程重启
-pm2 restart 先杀死原有的进程
-pm2 delete
+- pm2 stop ${id}
+- pm2 list
+- pm2 start
+- pm2 stop
+- pm2 reload 一个一个进程重启
+- pm2 restart 先杀死原有的进程
+- pm2 delete
 访问http://106.75.108.252:3000
 
 ### 自动部署
@@ -43,4 +44,19 @@ settings-personal settings-personal access token 填写name,勾选repo权限，�
 - git tag
 - git push origin v0.0.1
 - 进入github actions
+
+#### 设置服务器免密登录
+1. 生成密钥对
+- cd C:\Users\Administrator\.ssh
+- ssh-keygen
+- scp nllcoder_com_rsa.pub root@106.75.108.252.com:/root/.ssh
+2. 客户端修改.ssh/config, 增加如下内容：
+- Host nllcoder.com
+- HostName nllcoder.com
+- User rrot
+- PreferredAuthentication publickey
+- IdentityFile C:\Users\Administrator\.ssh\nllcoder_com_rsa
+3. 服务器端配置
+- cd ~/.ssh
+- cat >> authorized_keys < nllcoder_com_rsa.pub>
 
