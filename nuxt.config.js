@@ -31,12 +31,12 @@ export default {
             },
             {
               path: '/editor',
-              name: 'editor',
+              name: 'editorCreate',
               component: resolve(__dirname, 'pages/editor'),
             },
             {
               path: '/editor/:slug',
-              name: 'editor',
+              name: 'editorEdit',
               component: resolve(__dirname, 'pages/editor'),
             },
             {

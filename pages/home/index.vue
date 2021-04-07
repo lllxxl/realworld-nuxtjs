@@ -64,41 +64,8 @@
             </ul>
           </div>
 
-          <div
-            class="article-preview"
-            v-for="article in articles"
-            :key="article.slug"
-          >
-            <div class="article-meta">
-              <nuxt-link :to="`/profile/${article.author.username}`">
-                <img :src="article.author.image" />
-              </nuxt-link>
-              <div class="info">
-                <!-- <a href="" class="author">Eric Simons</a> -->
-                <nuxt-link
-                  :to="`/profile/${article.author.username}`"
-                  class="author"
-                >
-                  {{ article.author.username }}
-                </nuxt-link>
-                <span class="date">{{
-                  article.createdAt | dayjs("MMM DD, YYYY")
-                }}</span>
-              </div>
-              <button
-                class="btn btn-outline-primary btn-sm pull-xs-right"
-                :class="article.favorited ? 'active' : ''"
-                @click="handleFavoriteClick(article)"
-                :disabled="article.disableFavorite"
-              >
-                <i class="ion-heart"></i> {{ article.favoritesCount }}
-              </button>
-            </div>
-            <nuxt-link :to="`/article/${article.slug}`" class="preview-link">
-              <h1>{{ article.title }}</h1>
-              <p>{{ article.description }}</p>
-              <span>Read more...</span>
-            </nuxt-link>
+          <div v-for="article in articles" :key="article.slug">
+            <article-preview :article="article"/>
           </div>
           <ul class="pagination">
             <li
@@ -159,6 +126,8 @@ import {
   cancelFavorite,
 } from "@/api/article";
 import { listTags } from "@/api/tags";
+import ArticlePreview from '../../components/article-preview.vue';
+
 export default {
   name: "HomeIndex",
   watchQuery: ["page", "tag", "tab"],
@@ -197,7 +166,7 @@ export default {
       };
     } catch (e) {}
   },
-  components: {},
+  components: {ArticlePreview},
   data() {
     return {};
   },

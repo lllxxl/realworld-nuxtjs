@@ -40,55 +40,34 @@
           <div class="articles-toggle">
             <ul class="nav nav-pills outline-active">
               <li class="nav-item">
-                <a class="nav-link active" href="">My Articles</a>
+                <nuxt-link 
+                exact
+                class="nav-link"
+                :class="{
+                  active: !tab
+                }" 
+                :to="{
+                  query: {
+
+                  }
+                }">My Articles</nuxt-link>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="">Favorited Articles</a>
+                <nuxt-link class="nav-link" 
+                :class="{
+                  active: tab === 'favorited'
+                }"
+                exact :to="{
+                  query: {
+                    tab: 'favorited'
+                  }
+                }">Favorited Articles</nuxt-link>
               </li>
             </ul>
           </div>
 
-          <div class="article-preview">
-            <div class="article-meta">
-              <a href=""><img src="http://i.imgur.com/Qr71crq.jpg" /></a>
-              <div class="info">
-                <a href="" class="author">Eric Simons</a>
-                <span class="date">January 20th</span>
-              </div>
-              <button class="btn btn-outline-primary btn-sm pull-xs-right">
-                <i class="ion-heart"></i> 29
-              </button>
-            </div>
-            <a href="" class="preview-link">
-              <h1>How to build webapps that scale</h1>
-              <p>This is the description for the post.</p>
-              <span>Read more...</span>
-            </a>
-          </div>
-
-          <div class="article-preview">
-            <div class="article-meta">
-              <a href=""><img src="http://i.imgur.com/N4VcUeJ.jpg" /></a>
-              <div class="info">
-                <a href="" class="author">Albert Pai</a>
-                <span class="date">January 20th</span>
-              </div>
-              <button class="btn btn-outline-primary btn-sm pull-xs-right">
-                <i class="ion-heart"></i> 32
-              </button>
-            </div>
-            <a href="" class="preview-link">
-              <h1>
-                The song you won't ever stop singing. No matter how hard you
-                try.
-              </h1>
-              <p>This is the description for the post.</p>
-              <span>Read more...</span>
-              <ul class="tag-list">
-                <li class="tag-default tag-pill tag-outline">Music</li>
-                <li class="tag-default tag-pill tag-outline">Song</li>
-              </ul>
-            </a>
+          <div v-for="article in articles" :key="article.slug">
+            <article-preview :article="article" />
           </div>
         </div>
       </div>
@@ -100,13 +79,16 @@
 import { getProfile, followUser, unFollowUser } from "@/api/user.js";
 import { mapState } from "vuex";
 import { listArticles } from "@/api/article";
+import ArticlePreview from "@/components/article-preview.vue";
 export default {
   name: "profileIndex",
   middleware: "authenticated",
-  components: {},
+  watchQuery: ["tab"],
+  components: {
+    ArticlePreview,
+  },
   data() {
     return {
-      // profile: {},
       disableFollow: false,
     };
   },
@@ -125,27 +107,30 @@ export default {
       this.disableFollow = false;
     },
   },
-  async asyncData({params}) {
+  async asyncData({ params, query }) {
     const { username } = params;
+    const { tab } = query;
+    let articleApi = listArticles({
+        author: username,
+    })
+    
+    if(tab && tab === 'favorited'){
+      articleApi = listArticles({
+        favorited: username
+      })
+    }
+
     const [profileRes, userArticleRes] = await Promise.all([
       getProfile(username),
-      listArticles({
-        author: username
-      })
+      articleApi,
     ]);
 
-    console.log('-----------', profileRes, userArticleRes)
-
     return {
-      profile: profileRes.profile,
-      articles: userArticleRes.articles
-    }
-    
+      profile: profileRes.data.profile,
+      articles: userArticleRes.data.articles,
+      tab: tab
+    };
   },
-  // mounted() {
-  //   this.getProfile();
-  //   this.getUserArticle();
-  // },
 };
 </script>
 

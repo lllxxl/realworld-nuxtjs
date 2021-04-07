@@ -44,7 +44,7 @@ export default {
   async asyncData({ params }) {
     const { slug } = params;
     const { data } = await getArticle(slug);
-    console.log(data);
+    // console.log(data);
     const { article } = data;
     const md = new MarkdownIt();
     article.body = md.render(article.body);
