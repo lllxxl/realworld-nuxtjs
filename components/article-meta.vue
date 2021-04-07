@@ -35,13 +35,13 @@
       <i class="ion-plus-round"></i>
       &nbsp; <template v-if="article.author.following">UnFollow</template>
       <template v-else>Follow</template>
-      {{ article.author.username }} <span class="counter">(10)</span>
+      {{ article.author.username }}
     </button>
     <button
       class="btn btn-sm btn-outline-secondary"
       v-else
     >
-      <i class="ion-plus-round"></i>
+      <i class="ion-edit"></i>
       &nbsp; 
       Edit Article
     </button>
@@ -62,7 +62,7 @@
       class="btn btn-sm btn-outline-danger"
       v-else
     >
-      <i class="ion-plus-round"></i>
+      <i class="ion-trash-a"></i>
       &nbsp; 
       Delete Article
     </button>

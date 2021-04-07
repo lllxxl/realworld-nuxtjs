@@ -1,21 +1,18 @@
 import { request } from '@/plugins/request'
 
-export const listArticles = (data) => {
+export const listArticles = (params) => {
   return request({
     method: 'GET',
     url: '/api/articles',
-    data
+    params
   })
 }
 
-export const listFeedArticles = (data) => {
+export const listFeedArticles = (params) => {
   return request({
     method: 'GET',
     url: '/api/articles/feed',
-    // headers: {
-    //   Authorization: `Token eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTU0MTAzLCJ1c2VybmFtZSI6InhpeWlheGlhIiwiZXhwIjoxNjIyNDI0NzkyfQ.IShe65OPk7zqhpDDVkkAf4Ygc9nI0BOKz1vKWOpZwSc`
-    // },
-    data
+    params
   })
 }
 

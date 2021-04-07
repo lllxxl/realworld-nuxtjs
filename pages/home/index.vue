@@ -70,7 +70,9 @@
           <ul class="pagination">
             <li
               class="page-item"
-              :class="page === currentPage ? 'active' : ''"
+              :class="{
+                active: currentPage === page
+              }"
               v-for="page in totalPages"
               :key="page"
             >
@@ -133,7 +135,7 @@ export default {
   watchQuery: ["page", "tag", "tab"],
   async asyncData({ query }) {
     const currentPage = parseInt(query.page || 1);
-    const limit = 10;
+    const limit = 20;
     const tab = query.tab || "global_feed";
     const tag = query.tag;
     const fetchApi =
