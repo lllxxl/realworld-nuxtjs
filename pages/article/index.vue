@@ -3,7 +3,11 @@
     <div class="banner">
       <div class="container">
         <h1>{{ article.title }}</h1>
-        <article-meta :originArticle="article" />
+        <article-meta
+          :originArticle="article"
+          @favoriteClick="handleFavoriteClick"
+          :disableFavorite="disableFavorite"
+        />
       </div>
     </div>
 
@@ -15,7 +19,11 @@
       <hr />
 
       <div class="article-actions">
-        <article-meta :originArticle="article" />
+        <article-meta
+          :originArticle="article"
+          @favoriteClick="handleFavoriteClick"
+          :disableFavorite="disableFavorite"
+        />
       </div>
 
       <div class="row">
@@ -28,18 +36,20 @@
 </template>
 
 <script>
-import { getArticle } from "@/api/article";
+import { getArticle, addFavorite, cancelFavorite } from "@/api/article";
 import ArticleMeta from "@/components/article-meta.vue";
 import MarkdownIt from "markdown-it";
 import ArticleComments from "../../components/article-comments.vue";
 export default {
-  name: "article",
+  name: "ArticleIndex",
   components: {
     ArticleMeta,
     ArticleComments,
   },
   data() {
-    return {};
+    return {
+      disableFavorite: false,
+    };
   },
   async asyncData({ params }) {
     const { slug } = params;
@@ -68,7 +78,24 @@ export default {
   },
   computed: {},
   watch: {},
-  methods: {},
+  methods: {
+    async handleFavoriteClick() {
+      this.article.disableFavorite = true;
+      const { slug, favorited } = this.article;
+      const { data } = favorited
+        ? await cancelFavorite(slug)
+        : await addFavorite(slug);
+
+      if (favorited) {
+        this.article.favoritesCount--;
+        this.article.favorited = false;
+      } else {
+        this.article.favoritesCount++;
+        this.article.favorited = true;
+      }
+      this.article.disableFavorite = false;
+    },
+  },
 };
 </script>
 

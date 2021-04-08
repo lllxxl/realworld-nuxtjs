@@ -59,7 +59,8 @@
       :class="{
         active: article.favorited,
       }"
-      :disabled="isLoading"
+      :disabled="disableFavorite"
+      @click="handleFavoriteClick"
     >
       <i class="ion-heart"></i>
       &nbsp; <template v-if="article.favorited">UnFavorite</template>
@@ -85,6 +86,9 @@ export default {
       type: Object,
       required: true,
     },
+    disableFavorite: {
+      type: Boolean,
+    }
   },
   data() {
     return {
@@ -114,6 +118,9 @@ export default {
       this.isLoading = true;
       const result = await deleteArticle(this.article.slug)
       this.$router.push('/')
+    },
+    handleFavoriteClick(){
+      this.$emit('favoriteClick')
     }
   },
   mounted(){

@@ -42,6 +42,7 @@
                 @click="handleSubmit"
                 class="btn btn-lg pull-xs-right btn-primary"
                 type="button"
+                :disabled="disableSubmit"
               >
                 Publish Article
               </button>
@@ -67,12 +68,14 @@ export default {
         body: null,
         tagList: null,
       },
+      disableSubmit: false
     };
   },
   computed: {},
   watch: {},
   methods: {
     async handleSubmit(){
+      this.disableSubmit = true;
       const { params } = this.$route;
       const { slug } = params;
 
@@ -84,6 +87,7 @@ export default {
       const { data } = await result;
       const { article } = data;
       this.$router.push(`/article/${article.slug}`);
+      this.disableSubmit = false;
     }
   },
   async mounted(){
