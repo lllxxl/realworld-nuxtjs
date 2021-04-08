@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { createArticle, updateArticle } from '@/api/article.js';
+import { createArticle, updateArticle, getArticle } from '@/api/article.js';
 export default {
   name: "editor",
   middleware: "authenticated",
@@ -76,13 +76,23 @@ export default {
       const { params } = this.$route;
       const { slug } = params;
 
-      const { article } = await slug? updateArticle(slug, {
+      const result = slug? updateArticle(slug, {
         article: this.article
       }): createArticle({
         article: this.article
       })
+      const { data } = await result;
+      const { article } = data;
       this.$router.push(`/article/${article.slug}`);
     }
+  },
+  async mounted(){
+    const { params } = this.$route;
+    const { slug } = params;
+    if(!slug) return;
+    const { data } = await getArticle(slug);
+    const { article } = data;
+    this.article = article;
   }
 };
 </script>

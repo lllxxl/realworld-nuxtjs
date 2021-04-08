@@ -1,11 +1,12 @@
 <template>
   <div>
-    <form class="card comment-form">
+    <form class="card comment-form" @submit.prevent="handleAddComment">
       <div class="card-block">
         <textarea
           class="form-control"
           placeholder="Write a comment..."
           rows="3"
+          v-model="editComment"
         ></textarea>
       </div>
       <div class="card-footer">
@@ -59,7 +60,7 @@
 </template>
 
 <script>
-import { getComments } from "@/api/article.js";
+import { getComments, addComments } from "@/api/article.js";
 import { mapState } from "vuex";
 export default {
   name: "articleComments",
@@ -73,13 +74,26 @@ export default {
   data() {
     return {
       comments: [],
+      editComment: '',
     };
   },
   computed: {
     ...mapState(['user'])
   },
   watch: {},
-  methods: {},
+  methods: {
+    async handleAddComment(){
+    const { slug } = this.article;
+    const { data } = await addComments(slug, {
+      comment: {
+        body: this.editComment
+      }
+    })
+    const { comment } = data;
+    this.comments.push(comment);
+    this.editComment = '';
+  }
+  },
   async mounted() {
     const { slug } = this.article;
     const { data } = await getComments(slug);
